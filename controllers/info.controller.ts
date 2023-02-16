@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import Info from '../domains/echo/Info'
-
-const info = new Info()
+import Info from '../domains/info/Info'
 
 const echo = (req: Request, res: Response) => {
   res.send({
-    request: req.headers,
-    info: info.echo()
+    info: {
+      status: 'ok',
+      ...Info.getInfo()
+    }
   })
 }
 

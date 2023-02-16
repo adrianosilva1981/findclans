@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,10 +10,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model newtable {
-  id   Int?
-  name String? @db.VarChar
-
-  @@ignore
+model Character {
+  id Int @id @default(autoincrement())
+  name String @db.Text
+  sex String @db.Char(1)
+  birthday DateTime @db.Date
+  height Int
+  weight Decimal @db.Decimal(3,2)
+  bloodType String @db.VarChar(20)
+  ocupation String @db.VarChar(100)
+  afiliation String @db.VarChar(100)
+  patent String @db.VarChar(100)
+  register String @db.VarChar(100)
+  webpage String @db.Text
+  date DateTime @default(now())
+  images Character_Images[]
+  clans Clan_Characters[]
 }
+
+model Character_Images {
+  id Int @id @default(autoincrement())
+  characterId Int
+  character Character @relation(fields: [characterId], references: [id])
+  order Int
+  date DateTime @default(now())
+}
+
+model Clan {
+  id Int @id @default(autoincrement())
+  name String @db.Text
+  webpage String @db.Text
+  icon String @db.Text
+  date DateTime @default(now())
+  clans Clan_Characters[]
+}
+
+model Clan_Characters {
+  id Int @id @default(autoincrement())
+  clanId Int
+  clan Clan @relation(fields: [clanId], references: [id])
+  characterId Int
+  character Character @relation(fields: [characterId], references: [id])
+  date DateTime @default(now())
+}
+

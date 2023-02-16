@@ -1,22 +1,26 @@
-import express, { Express } from 'express'
+import express, { Express, Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
-import infoUtils from './utils/info.util'
+import Info from './domains/info/Info'
 
-import echoRouter from './routes/echo.route'
+// importing routes
+import infoRouter from './routes/info.route'
+import authRouter from './routes/auth.route'
 
 const app: Express = express()
-const name = infoUtils.NAME
-const domain = infoUtils.DOMAIN
-const port = infoUtils.PORT
+const { name, domain, port } = Info.getInfo()
 
-//routes
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
 
 // route definitions
-app.get('/', echoRouter)
+// criar uma rota para unauthorized
+app.get('/unauthorized', (req: Request, res: Response) => { res.status(401).send({ message: 'Unauthorized' }) })
 
+app.use('/', infoRouter)
+app.use('/auth', authRouter)
+
+// api listen
 app.listen(port, () => {
   console.log(`⚡️[${name}]: Server is running at ${domain}:${port}`)
 })
