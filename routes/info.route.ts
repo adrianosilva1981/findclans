@@ -1,10 +1,8 @@
 import express from 'express'
-import infoController from '../controllers/info.controller'
-// import authMiddleware from '../middlewares/auth.mid'
-
+import { GetInfoController } from '../src/modules/info/useCases/getInfo/GetInfoController'
 
 const router = express.Router()
 
-router.get('/', infoController.echo)
+router.get('/', GetInfoController.handle)
 
 export default router

@@ -1,24 +1,27 @@
-import express, { Express, Request, Response, NextFunction } from 'express'
+import express, { Express, Request, Response } from 'express'
 import bodyParser from 'body-parser'
-import Info from './domains/info/Info'
 
 // importing routes
 import infoRouter from './routes/info.route'
 import authRouter from './routes/auth.route'
+import characterRouter from './routes/character.route'
+import GetInfo from './src/modules/info/useCases/getInfo/GetInfo'
 
+const getInfo = new GetInfo()
 const app: Express = express()
-const { name, domain, port } = Info.getInfo()
+const { name, domain, port } = getInfo.execute()
 
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
 
 // route definitions
-// criar uma rota para unauthorized
-app.get('/unauthorized', (req: Request, res: Response) => { res.status(401).send({ message: 'Unauthorized' }) })
-
 app.use('/', infoRouter)
 app.use('/auth', authRouter)
+app.use('/character', characterRouter)
+app.get('/unauthorized', (req: Request, res: Response) => {
+  res.status(401).send({ message: 'Unauthorized' })
+})
 
 // api listen
 app.listen(port, () => {
