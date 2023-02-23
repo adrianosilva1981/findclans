@@ -1,6 +1,6 @@
 import express from 'express'
 import credentialsMid from '../middlewares/credentials.mid'
-import { GetAuthController } from '../src/modules/auth/useCases/getAuth/GetAuthController'
+import { GetAuthController } from '../modules/auth/useCases/getAuth/GetAuthController'
 
 
 const router = express.Router()

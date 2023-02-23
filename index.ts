@@ -2,9 +2,11 @@ import express, { Express, Request, Response } from 'express'
 import bodyParser from 'body-parser'
 
 // importing routes
-import infoRouter from './routes/info.route'
-import authRouter from './routes/auth.route'
-import characterRouter from './routes/character.route'
+import infoRouter from './src/routes/info.route'
+import authRouter from './src/routes/auth.route'
+import characterRouter from './src/routes/character.route'
+
+// import classes
 import GetInfo from './src/modules/info/useCases/getInfo/GetInfo'
 
 const getInfo = new GetInfo()
