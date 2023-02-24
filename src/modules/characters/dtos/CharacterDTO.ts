@@ -10,5 +10,4 @@ export interface CharacterDTO {
   patent: string;
   register: string;
   webpage: string;
-  date: Date;
 }
