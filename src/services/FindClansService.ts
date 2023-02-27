@@ -1,6 +1,7 @@
 import RequestService from "./RequestService"
 import jwt_decode from "jwt-decode"
 import dotenv from 'dotenv'
+import GetInfo from "../modules/info/useCases/getInfo/GetInfo"
 dotenv.config()
 
 
@@ -12,6 +13,8 @@ export default class FindClansService extends RequestService {
 
   constructor() {
     super();
+
+    // GetInfo
   }
 
   async getCharacters(page: number = 1, limit: number = 10) {

@@ -12,6 +12,7 @@ datasource db {
 
 model Character {
   id Int @id @default(autoincrement())
+  originalId Int @db.Integer
   name String @db.Text
   description String @db.Text
   sex String @db.Text
@@ -25,6 +26,7 @@ model Character {
   register String @db.Text
   webpage String @db.Text
   date DateTime @default(now())
+  status String @db.Text
   images Character_Images[]
   clans Clan_Characters[]
 }

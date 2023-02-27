@@ -4,7 +4,9 @@ export default function dt(data: Array<any>): Array<CharacterDTO> {
   return data.map(el => {
     const { info } = el
     return {
+      originalId: el.id,
       name: el.name || '',
+      status: info['Estado'],
       description: Array.isArray(el.about) ? el.about.join('\n') : '',
       sex: info['Sexo'] || '',
       birthday: info['Aniversário'] || '',

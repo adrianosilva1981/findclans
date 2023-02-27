@@ -1,9 +1,12 @@
 export interface CharacterDTO {
+  originalId: number;
   name: string;
+  status: string;
+  description: string;
   sex: string;
-  birthday: Date;
-  height: number;
-  weight: number;
+  birthday: string;
+  height: string;
+  weight: string;
   bloodType: string;
   ocupation: string;
   afiliation: string;
