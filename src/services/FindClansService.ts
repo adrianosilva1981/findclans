@@ -14,9 +14,9 @@ export default class FindClansService extends RequestService {
     super();
   }
 
-  async getCharacters() {
+  async getCharacters(page: number = 1, limit: number = 10) {
     await this.auth()
-    const url = `${this.baseUrl}/characters`
+    const url = `${this.baseUrl}/characters?page=${page}&limit=${limit}`
     return await this.request('GET', url, {}, this.headers)
   }
 

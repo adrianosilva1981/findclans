@@ -4,8 +4,8 @@ import { CharacterDTO } from '../../dtos/CharacterDTO';
 
 export default class CreateCharacter  {
 
- async execute(character: CharacterDTO): Promise<Character> {
-  return await prisma.character.create({ data: character })
+ async execute(character: Array<CharacterDTO>): Promise<Object> {
+  return await prisma.character.createMany({ data: character })
  }
 
 }

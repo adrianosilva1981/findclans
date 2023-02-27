@@ -13,15 +13,16 @@ datasource db {
 model Character {
   id Int @id @default(autoincrement())
   name String @db.Text
-  sex String @db.Char(1)
-  birthday DateTime @db.Date
-  height Int
-  weight Decimal @db.Decimal(3,2)
-  bloodType String @db.VarChar(20)
-  ocupation String @db.VarChar(100)
-  afiliation String @db.VarChar(100)
-  patent String @db.VarChar(100)
-  register String @db.VarChar(100)
+  description String @db.Text
+  sex String @db.Text
+  birthday String @db.Text
+  height String @db.Text
+  weight String @db.Text
+  bloodType String @db.Text
+  ocupation String @db.Text
+  afiliation String @db.Text
+  patent String @db.Text
+  register String @db.Text
   webpage String @db.Text
   date DateTime @default(now())
   images Character_Images[]

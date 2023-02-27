@@ -1,4 +1,6 @@
-import FindClansService from "../services/FindClansService";
+import FindClansService from '../services/FindClansService'
+import CharacterDTO from '../dts/characterDT'
+import CreateCharacter from '../modules/characters/useCases/createCharacter/CreateCharacter'
 
 
 class getCharacters {
@@ -6,17 +8,23 @@ class getCharacters {
   async run() {
     try {
       const findClansService = new FindClansService()
-      const { body = {} } = await findClansService.getCharacters()
-      const { character = [] } = body
 
-      if (!Array.isArray(character) || !character.length) {
-        return {
-          success: false,
-          message: 'Characters is empty'
-        }
+      let characters = []
+      const prismaResponse = []
+      for (let page = 1; (page === 1 || characters.length); page++) {
+        console.log(`Getting page ${page}...`)
+        const { body = {} } = await findClansService.getCharacters(page)
+        characters = body.characters || []
+
+        if (!characters.length) continue
+
+        const characterTransformed = CharacterDTO(characters)
+        const createUserUseCase = new CreateCharacter()
+
+        prismaResponse.push(await createUserUseCase.execute(characterTransformed))
       }
 
-
+      console.log(`Prisma response ${JSON.stringify(prismaResponse)}...`)
 
       // return response
 
