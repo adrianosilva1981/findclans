@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Character {
+model Characters {
   id Int @id @default(autoincrement())
   originalId Int @db.Integer
   name String @db.Text
@@ -28,32 +28,26 @@ model Character {
   date DateTime @default(now())
   status String @db.Text
   images Character_Images[]
-  clans Clan_Characters[]
+  clanId Int?
+  clan Clans? @relation(fields: [clanId], references: [id])
 }
 
 model Character_Images {
   id Int @id @default(autoincrement())
   characterId Int
-  character Character @relation(fields: [characterId], references: [id])
+  character Characters @relation(fields: [characterId], references: [id])
   order Int
   date DateTime @default(now())
 }
 
-model Clan {
+model Clans {
   id Int @id @default(autoincrement())
   name String @db.Text
   webpage String @db.Text
   icon String @db.Text
   date DateTime @default(now())
-  clans Clan_Characters[]
+  character Characters[]
 }
 
-model Clan_Characters {
-  id Int @id @default(autoincrement())
-  clanId Int
-  clan Clan @relation(fields: [clanId], references: [id])
-  characterId Int
-  character Character @relation(fields: [characterId], references: [id])
-  date DateTime @default(now())
-}
+
 

@@ -1,4 +1,4 @@
-import { CharacterDTO } from "../modules/characters/dtos/CharacterDTO"
+import { CharacterDTO } from "../domain/interfaces/Character/CharacterDTO"
 
 export default function dt(data: Array<any>): Array<CharacterDTO> {
   return data.map(el => {
