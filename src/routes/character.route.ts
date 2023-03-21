@@ -1,14 +1,14 @@
 import express from 'express'
 import { CharacterController } from '../modules/characters/CharacterController'
-// import authMiddleware from '../middlewares/auth.mid'
+import authMiddleware from '../middlewares/authorize.mid'
 
 const characterController = new CharacterController()
 const router = express.Router()
 
-router.get('/', characterController.find)
-router.get('/:id', characterController.create)
-router.post('/', characterController.create)
-router.put('/:id', characterController.create)
-router.delete('/:id', characterController.create)
+router.get('/', authMiddleware.authorize, characterController.find)
+router.get('/:id', authMiddleware.authorize, characterController.getById)
+router.post('/', authMiddleware.authorize, characterController.create)
+router.put('/:id', authMiddleware.authorize, characterController.update)
+router.delete('/:id', authMiddleware.authorize, characterController.delete)
 
 export default router

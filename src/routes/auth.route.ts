@@ -1,10 +1,10 @@
 import express from 'express'
 import credentialsMid from '../middlewares/credentials.mid'
-import { GetAuthController } from '../modules/auth/useCases/getAuth/GetAuthController'
+import { AuthController } from '../modules/auth/AuthController'
 
-
+const authController = new AuthController()
 const router = express.Router()
 
-router.post('/', credentialsMid.postIsValid, GetAuthController.handle)
+router.post('/', credentialsMid.postIsValid, authController.auth)
 
 export default router

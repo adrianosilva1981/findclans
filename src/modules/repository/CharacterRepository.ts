@@ -1,6 +1,6 @@
-import CharacterInterface from "../../domain/interfaces/Character/CharacterInterface";
 import { prisma } from "../../../prisma/client";
 import { Characters } from "@prisma/client";
+import CharacterInterface from "../../domain/interfaces/Character/CharacterInterface";
 
 export default class CharacterRepository implements CharacterInterface {
   async find(object: object): Promise<Characters[]> {

@@ -3,10 +3,10 @@ import UserUseCases from "./UserUseCases";
 
 const userUseCase = new UserUseCases();
 
-export class CharacterController {
+export class UserController {
   async find(req: Request, res: Response) {
     const { body } = req;
-    const result = await userUseCase.create(body);
+    const result = await userUseCase.find(body);
 
     return res.status(200).json(result);
   }

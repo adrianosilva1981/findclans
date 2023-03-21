@@ -1,5 +1,4 @@
 import { Characters } from "@prisma/client";
-import { CharacterDTO } from '../../domain/interfaces/Character/CharacterDTO';
 import CharacterRepository from '../repository/CharacterRepository';
 
 export default class CharacterUseCases {

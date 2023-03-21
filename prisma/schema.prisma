@@ -48,9 +48,10 @@ model Clans {
   character Characters[]
 }
 
-model apiUsers {
+model Users {
   id       Int    @id @default(autoincrement())
   name     String @db.Text
+  email    String @db.Text
   avatar   String @db.Text
   password String @db.Text
   birthday String @db.Text

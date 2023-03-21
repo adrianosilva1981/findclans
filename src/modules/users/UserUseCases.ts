@@ -1,5 +1,4 @@
 import { Users } from "@prisma/client";
-import { UserDTO } from '../../domain/interfaces/User/UserDTO';
 import UserRepository from '../repository/UserRepository';
 
 export default class UserUseCases {
