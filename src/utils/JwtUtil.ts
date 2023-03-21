@@ -8,15 +8,9 @@ export default class JwtUtil {
   private saltKey = process.env.SALT_KEY as jwt.Secret
 
   generateToken(data: object) {
-    const expiresIn = new Date().getMinutes() + 30
-    const jwtInfo = {
-      ...data,
-      ... {
-        expiresIn
-      }
-    }
+    const expiresIn = 30 * 60
     return {
-      accessToken: jwt.sign(jwtInfo, this.saltKey, { expiresIn })
+      accessToken: jwt.sign(data, this.saltKey, { expiresIn })
     }
   }
 

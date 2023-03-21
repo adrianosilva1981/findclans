@@ -9,20 +9,59 @@ export default class UserUseCases {
     this.userRepository = new UserRepository()
   }
 
-  async find(object: {}): Promise<Users[]> {
-    return await this.userRepository.find(object)
+  async find(object: object): Promise<Object[]> {
+    const users = await this.userRepository.find(object)
+    return users.map(user => ({
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      birthday: user.birthday,
+    }))
   }
 
-  async getById(id: number): Promise<Users | null> {
-    return await this.userRepository.getById(id)
+  async getById(id: number): Promise<Object | null> {
+    const user = await this.userRepository.getById(id)
+    if (user) {
+      return {
+        id: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        birthday: user.birthday,
+      }
+    }
+    return null
   }
 
-  async create(user: Users): Promise<Users> {
-    return await this.userRepository.create(user)
+  async create(user: Users): Promise<Object> {
+    const {
+      id,
+      name,
+      avatar,
+      birthday,
+    } = await this.userRepository.create(user)
+
+    return {
+      id,
+      name,
+      avatar,
+      birthday,
+    }
   }
 
-  async update(id:number, user: Users): Promise<Users> {
-    return await this.userRepository.update(id, user)
+  async update(Id: number, user: Users): Promise<Object> {
+    const {
+      id,
+      name,
+      avatar,
+      birthday,
+    } = await this.userRepository.update(Id, user)
+
+    return {
+      id,
+      name,
+      avatar,
+      birthday,
+    }
   }
 
   async delete(id:number): Promise<Object> {
