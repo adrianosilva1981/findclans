@@ -1,3 +1,4 @@
+import { Characters } from "@prisma/client";
 import { CharacterDTO } from '../../domain/interfaces/Character/CharacterDTO';
 import CharacterRepository from '../repository/CharacterRepository';
 
@@ -9,20 +10,20 @@ export default class CharacterUseCases {
     this.characterRepository = new CharacterRepository()
   }
 
-  async find(object: {}): Promise<Object | null> {
+  async find(object: {}): Promise<Characters[]> {
     return await this.characterRepository.find(object)
   }
 
-  async getById(id: number): Promise<Object | null> {
+  async getById(id: number): Promise<Characters | null> {
     return await this.characterRepository.getById(id)
   }
 
-  async create(characters: CharacterDTO[]): Promise<Object> {
-    return await this.characterRepository.create(characters)
+  async create(character: Characters): Promise<Characters> {
+    return await this.characterRepository.create(character)
   }
 
-  async update(id:number, object: {}): Promise<Object> {
-    return await this.characterRepository.update(id, object)
+  async update(id:number, characters: Characters): Promise<Characters> {
+    return await this.characterRepository.update(id, characters)
   }
 
   async delete(id:number): Promise<Object> {

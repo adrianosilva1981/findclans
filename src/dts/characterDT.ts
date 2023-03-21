@@ -4,7 +4,6 @@ export default function dt(data: Array<any>): Array<CharacterDTO> {
   return data.map(el => {
     const { info } = el
     return {
-      originalId: el.id,
       name: el.name || '',
       status: info['Estado'],
       description: Array.isArray(el.about) ? el.about.join('\n') : '',
@@ -18,6 +17,7 @@ export default function dt(data: Array<any>): Array<CharacterDTO> {
       patent: info['Patente Ninja'] || '',
       register: info['Registro Ninja'] || '',
       webpage: el.page || '',
+      clanId: el.clanId || null
     }
   })
 }

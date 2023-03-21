@@ -11,43 +11,47 @@ datasource db {
 }
 
 model Characters {
-  id Int @id @default(autoincrement())
-  originalId Int @db.Integer
-  name String @db.Text
-  description String @db.Text
-  sex String @db.Text
-  birthday String @db.Text
-  height String @db.Text
-  weight String @db.Text
-  bloodType String @db.Text
-  ocupation String @db.Text
-  afiliation String @db.Text
-  patent String @db.Text
-  register String @db.Text
-  webpage String @db.Text
-  date DateTime @default(now())
-  status String @db.Text
-  images Character_Images[]
-  clanId Int?
-  clan Clans? @relation(fields: [clanId], references: [id])
+  id          Int                @id @default(autoincrement())
+  name        String             @db.Text
+  description String             @db.Text
+  sex         String             @db.Text
+  birthday    String             @db.Text
+  height      String             @db.Text
+  weight      String             @db.Text
+  bloodType   String             @db.Text
+  ocupation   String             @db.Text
+  afiliation  String             @db.Text
+  patent      String             @db.Text
+  register    String             @db.Text
+  webpage     String             @db.Text
+  date        DateTime           @default(now())
+  status      String             @db.Text
+  images      Character_Images[]
+  clanId      Int?
+  clan        Clans?             @relation(fields: [clanId], references: [id])
 }
 
 model Character_Images {
-  id Int @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   characterId Int
-  character Characters @relation(fields: [characterId], references: [id])
-  order Int
-  date DateTime @default(now())
+  character   Characters @relation(fields: [characterId], references: [id])
+  order       Int
+  date        DateTime   @default(now())
 }
 
 model Clans {
-  id Int @id @default(autoincrement())
-  name String @db.Text
-  webpage String @db.Text
-  icon String @db.Text
-  date DateTime @default(now())
+  id        Int          @id @default(autoincrement())
+  name      String       @db.Text
+  webpage   String       @db.Text
+  icon      String       @db.Text
+  date      DateTime     @default(now())
   character Characters[]
 }
 
-
-
+model apiUsers {
+  id       Int    @id @default(autoincrement())
+  name     String @db.Text
+  avatar   String @db.Text
+  password String @db.Text
+  birthday String @db.Text
+}

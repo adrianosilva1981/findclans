@@ -1,5 +1,4 @@
 export interface CharacterDTO {
-  originalId: number
   name: string
   description: string
   sex: string
