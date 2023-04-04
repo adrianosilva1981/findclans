@@ -11,12 +11,12 @@ export default class ClanRepository implements ClanInterface {
     return await prisma.clans.findUnique({ where: { id } })
   }
 
-  async create(user: Clans): Promise<Clans> {
-    return await prisma.clans.create({ data: user })
+  async create(clan: Clans): Promise<Clans> {
+    return await prisma.clans.create({ data: clan })
   }
 
-  async update(id:number, user: Clans): Promise<Clans> {
-    return await prisma.clans.update({ data: user, where: { id } })
+  async update(id:number, clan: Clans): Promise<Clans> {
+    return await prisma.clans.update({ data: clan, where: { id } })
   }
 
   async delete(id:number): Promise<Object> {

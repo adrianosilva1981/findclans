@@ -3,7 +3,7 @@ import ClanUseCases from "./ClanUseCases";
 
 const clanUseCase = new ClanUseCases();
 
-export class UserController {
+export class ClanController {
   async find(req: Request, res: Response) {
     try {
       const { body } = req;

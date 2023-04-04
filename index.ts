@@ -24,7 +24,7 @@ app.use('/', infoRouter)
 app.use('/auth', authRouter)
 app.use('/character', characterRouter)
 app.use('/user', userRouter)
-app.use('/clan', clanRouter)
+app.use('/clans', clanRouter)
 
 app.get('/unauthorized', (req: Request, res: Response) => {
   res.status(401).send({ message: 'Unauthorized' })
