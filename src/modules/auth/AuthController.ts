@@ -10,6 +10,10 @@ export class AuthController {
     const { email, password } = req.body
     const response = await authUseCases.auth(email, password)
 
+    if (!response) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
     return res.status(200).json(response);
   }
 

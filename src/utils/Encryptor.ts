@@ -2,7 +2,7 @@ import sha256 from 'crypto-js/sha256';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import Base64 from 'crypto-js/enc-base64';
 import dotenv from 'dotenv'
-import { hash, compare } from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 
 dotenv.config()
 
@@ -14,18 +14,14 @@ export default class Encryptor {
     this.privateKey = process.env.SALT_KEY
   }
 
-  async ncrypt (message: string) {
-
-    const hashResult = await hash(message, 6);
-
-    // const doesPawordMatch = await compare(pass, user.password)
-
-    /* if (!doesPawordMatch) {
-      throw new Error("");
-    } */
-
-    const hashDigest = sha256(message);
-    return Base64.stringify(hmacSHA512(hashDigest, this.privateKey));
+  encrypt (message: string): string {
+    const salt = bcrypt.genSaltSync(8)
+    const hash = bcrypt.hashSync(message, salt)
+    // return Base64.stringify(hmacSHA512(hash, this.privateKey))
+    return hash
   }
 
+  compare(text: string, reference: string): boolean {
+    return bcrypt.compareSync(text, reference);
+  }
 }

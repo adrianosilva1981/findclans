@@ -1,7 +1,6 @@
 import { Users } from "@prisma/client";
 import { prisma } from "../../../prisma/client";
 import UserInterface from "../../domain/interfaces/User/UserInterface";
-import Encryptor from "../../utils/Encryptor";
 
 export default class UserRepository implements UserInterface {
   async find(object: {}): Promise<Users[]> {
@@ -13,8 +12,6 @@ export default class UserRepository implements UserInterface {
   }
 
   async create(user: Users): Promise<Users> {
-    const encryptor = new Encryptor()
-    user.password = encryptor.encrypt(user.password)
     return await prisma.users.create({ data: user })
   }
 
@@ -22,7 +19,7 @@ export default class UserRepository implements UserInterface {
     return await prisma.users.update({ data: user, where: { id } })
   }
 
-  async delete(id:number): Promise<Object> {
+  async delete(id:number): Promise<Users> {
     return await prisma.users.delete({ where: { id } })
   }
 }

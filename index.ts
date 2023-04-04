@@ -6,6 +6,7 @@ import infoRouter from './src/routes/info.route'
 import authRouter from './src/routes/auth.route'
 import characterRouter from './src/routes/character.route'
 import userRouter from './src/routes/user.route'
+import clanRouter from './src/routes/clan.route'
 
 // import classes
 import GetInfo from './src/modules/info/useCases/getInfo/GetInfo'
@@ -23,6 +24,7 @@ app.use('/', infoRouter)
 app.use('/auth', authRouter)
 app.use('/character', characterRouter)
 app.use('/user', userRouter)
+app.use('/clan', clanRouter)
 
 app.get('/unauthorized', (req: Request, res: Response) => {
   res.status(401).send({ message: 'Unauthorized' })

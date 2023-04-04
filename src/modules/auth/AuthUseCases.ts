@@ -13,10 +13,13 @@ export default class GetAuth {
 
   async auth (email: string, password: string): Promise<any> {
     const encryptor = new Encryptor()
-    password = encryptor.encrypt(password)
-    const user = await this.userRepository.find({ email, password })
+    const user = await this.userRepository.find({ email })
     if (!user.length) {
-      return []
+      return false
+    }
+
+    if (!encryptor.compare(password, user[0].password)) {
+      return false
     }
 
     const jwtUtil = new JwtUtil()
