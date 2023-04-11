@@ -74,4 +74,18 @@ export class UserController {
       return res.status(500).json({ message });
     }
   }
+
+  async updateAcess(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const { body: { email, password } } = req;
+
+      const result = await userUseCase.updateAcess(id, { email, password });
+
+      return res.status(200).json(UserDT.convertPublicUserData(result));
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+    }
+  }
 }

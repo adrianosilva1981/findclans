@@ -10,5 +10,6 @@ router.get('/:id', authMiddleware.authorize, userController.getById)
 router.post('/', authMiddleware.authorize, userController.create)
 router.put('/:id', authMiddleware.authorize, userController.update)
 router.delete('/:id', authMiddleware.authorize, userController.delete)
+router.put('/update-acess/:id', authMiddleware.authorize, userController.updateAcess)
 
 export default router

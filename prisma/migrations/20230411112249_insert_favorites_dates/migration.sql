@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Users_Favorites_Characters" ADD COLUMN     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "Users_Favorites_Clans" ADD COLUMN     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

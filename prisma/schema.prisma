@@ -11,24 +11,25 @@ datasource db {
 }
 
 model Characters {
-  id          Int                @id @default(autoincrement())
-  name        String             @db.Text
-  description String             @db.Text
-  sex         String             @db.Text
-  birthday    String             @db.Text
-  height      String             @db.Text
-  weight      String             @db.Text
-  bloodType   String             @db.Text
-  ocupation   String             @db.Text
-  afiliation  String             @db.Text
-  patent      String             @db.Text
-  register    String             @db.Text
-  webpage     String             @db.Text
-  date        DateTime           @default(now())
-  status      String             @db.Text
+  id          Int                          @id @default(autoincrement())
+  name        String                       @db.Text
+  description String                       @db.Text
+  sex         String                       @db.Text
+  birthday    String                       @db.Text
+  height      String                       @db.Text
+  weight      String                       @db.Text
+  bloodType   String                       @db.Text
+  ocupation   String                       @db.Text
+  afiliation  String                       @db.Text
+  patent      String                       @db.Text
+  register    String                       @db.Text
+  webpage     String                       @db.Text
+  date        DateTime                     @default(now())
+  status      String                       @db.Text
   images      Character_Images[]
   clanId      Int?
-  clan        Clans?             @relation(fields: [clanId], references: [id])
+  clan        Clans?                       @relation(fields: [clanId], references: [id])
+  favorites   Users_Favorites_Characters[]
 }
 
 model Character_Images {
@@ -40,19 +41,40 @@ model Character_Images {
 }
 
 model Clans {
-  id        Int          @id @default(autoincrement())
-  name      String       @db.Text
-  webpage   String       @db.Text
-  icon      String       @db.Text
-  date      DateTime     @default(now())
+  id        Int                     @id @default(autoincrement())
+  name      String                  @db.Text
+  webpage   String                  @db.Text
+  icon      String                  @db.Text
+  date      DateTime                @default(now())
   character Characters[]
+  favorites Users_Favorites_Clans[]
 }
 
 model Users {
-  id       Int    @id @default(autoincrement())
-  name     String @db.Text
-  email    String @db.Text
-  avatar   String @db.Text
-  password String @db.Text
-  birthday String @db.Text
+  id                  Int                          @id @default(autoincrement())
+  name                String                       @db.Text
+  email               String                       @db.Text
+  avatar              String                       @db.Text
+  password            String                       @db.Text
+  birthday            String                       @db.Text
+  favorite_characters Users_Favorites_Characters[]
+  favorite_clans      Users_Favorites_Clans[]
+}
+
+model Users_Favorites_Clans {
+  id     Int   @id @default(autoincrement())
+  clanId Int
+  userId Int
+  clan   Clans @relation(fields: [clanId], references: [id])
+  user   Users @relation(fields: [userId], references: [id])
+  date        DateTime   @default(now())
+}
+
+model Users_Favorites_Characters {
+  id          Int        @id @default(autoincrement())
+  characterId Int
+  userId      Int
+  characters  Characters @relation(fields: [characterId], references: [id])
+  user        Users      @relation(fields: [userId], references: [id])
+  date        DateTime   @default(now())
 }
