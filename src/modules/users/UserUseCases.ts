@@ -1,7 +1,10 @@
-import { Users } from "@prisma/client";
+import { Users, Users_Favorites_Characters } from "@prisma/client";
 import Encryptor from "../../utils/Encryptor";
 import ParamsValidator from "../../utils/ParamsValidator";
+import UserFavoriteCharacterRepository from "../repository/UserFavoriteCharacterRepository";
 import UserRepository from "../repository/UserRepository";
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default class UserUseCases {
   private userRepository: UserRepository;
@@ -53,12 +56,42 @@ export default class UserUseCases {
     const encryptor = new Encryptor();
     data.password = encryptor.encrypt(data.password);
 
-    delete data.email
+    delete data.email;
 
     return this.userRepository.update(Id, data);
   }
 
   async delete(id: number): Promise<Users> {
     return this.userRepository.delete(id);
+  }
+
+  async getUserFavoriteCharacters(userId: number, page: number, rows: number): Promise<Users_Favorites_Characters[] | null> {
+    const { PAGINATION_LIMIT = 20 } = process.env
+    const skip = page * rows
+    const finalLimit = rows || PAGINATION_LIMIT
+    const userFavoriteCharacterRepository = new UserFavoriteCharacterRepository(userId);
+    return userFavoriteCharacterRepository.find({ userId }, Number(finalLimit), skip);
+  }
+
+  async createUserFavorite(data: Users_Favorites_Characters): Promise<Users_Favorites_Characters> {
+    const keys = ["characterId", "userId"];
+    const errors: string[] = ParamsValidator.validator(keys, data);
+
+    if (errors.length)
+      throw new Error(`Some params are missing: '${errors.join("', '")}'`);
+
+    const { characterId, userId } = data;
+    const userFavoriteCharacterRepository = new UserFavoriteCharacterRepository(data.userId);
+    const favorites = await userFavoriteCharacterRepository.find({ characterId, userId }, 1);
+
+    if (favorites?.length)
+      return favorites[0];
+
+    return userFavoriteCharacterRepository.create(data.characterId);
+  }
+
+  async deleteFavorite(id: number): Promise<Object> {
+    const userFavoriteCharacterRepository = new UserFavoriteCharacterRepository(0);
+    return userFavoriteCharacterRepository.delete(id);
   }
 }

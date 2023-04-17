@@ -12,4 +12,8 @@ router.put('/:id', authMiddleware.authorize, userController.update)
 router.delete('/:id', authMiddleware.authorize, userController.delete)
 router.put('/update-acess/:id', authMiddleware.authorize, userController.updateAcess)
 
+router.get('/favorites/characters/:id', authMiddleware.authorize, userController.getUserFavoriteCharacters)
+router.post('/favorites/characters', authMiddleware.authorize, userController.createUserFavorite)
+router.delete('/favorites/characters/:id', authMiddleware.authorize, userController.deleteFavorite)
+
 export default router

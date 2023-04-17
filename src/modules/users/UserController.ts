@@ -1,4 +1,4 @@
-import { Users } from "@prisma/client";
+import { Users, Users_Favorites_Characters } from "@prisma/client";
 import { Request, Response } from "express";
 import UserDT from "../../domain/dts/UserDT";
 import UserUseCases from "./UserUseCases";
@@ -13,7 +13,7 @@ export class UserController {
 
       results = results.map((user: Users) => {
         return UserDT.convertPublicUserData(user);
-      })
+      });
 
       return res.status(200).json(results);
     } catch (error) {
@@ -53,7 +53,7 @@ export class UserController {
       const id = Number(req.params.id);
       const { body } = req;
 
-      const safeData = UserDT.convertUserDatatoUpdate(body)
+      const safeData = UserDT.convertUserDatatoUpdate(body);
       const result = await userUseCase.update(id, safeData);
 
       return res.status(200).json(UserDT.convertPublicUserData(result));
@@ -78,11 +78,48 @@ export class UserController {
   async updateAcess(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      const { body: { email, password } } = req;
+      const {
+        body: { email, password },
+      } = req;
 
       const result = await userUseCase.updateAcess(id, { email, password });
 
       return res.status(200).json(UserDT.convertPublicUserData(result));
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+    }
+  }
+
+  async getUserFavoriteCharacters(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { page = null, rows = null  } = req.query;
+      const results = await userUseCase.getUserFavoriteCharacters(Number(id), Number(page), Number(rows));
+
+      return res.status(200).json(results);
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+    }
+  }
+
+  async createUserFavorite(req: Request, res: Response) {
+    try {
+      const { body } = req;
+      const result = await userUseCase.createUserFavorite(body);
+      return res.status(200).json(result);
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+    }
+  }
+
+  async deleteFavorite(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const result = await userUseCase.deleteFavorite(Number(id));
+      return res.status(200).json(result);
     } catch (error) {
       const message = (error as Error).message;
       return res.status(500).json({ message });

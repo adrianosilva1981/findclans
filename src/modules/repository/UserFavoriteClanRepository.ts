@@ -1,6 +1,6 @@
 import { Users, Users_Favorites_Clans } from "@prisma/client";
 import { prisma } from "../../../prisma/client";
-import UserFavoriteClanInterface from "../../domain/interfaces/UserFavoriteClan/UserFavoriteClanInterface";
+import UserFavoriteClanInterface from "../../domain/interfaces/User/UserFavoriteClanInterface";
 
 export default class UserFavoriteClanRepository implements UserFavoriteClanInterface {
   async getUserFavorites(userId: number): Promise<Users_Favorites_Clans[] | null> {
