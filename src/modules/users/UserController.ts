@@ -104,10 +104,21 @@ export class UserController {
     }
   }
 
-  async createUserFavorite(req: Request, res: Response) {
+  async createUserFavoriteCharacter(req: Request, res: Response) {
     try {
       const { body } = req;
       const result = await userUseCase.createUserFavorite(body);
+      return res.status(201).json(result);
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+    }
+  }
+
+  async deleteFavoriteCharacter(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const result = await userUseCase.deleteFavoriteCharacter(Number(id));
       return res.status(200).json(result);
     } catch (error) {
       const message = (error as Error).message;
@@ -115,14 +126,40 @@ export class UserController {
     }
   }
 
-  async deleteFavorite(req: Request, res: Response) {
+  async getUserFavoriteClans(req: Request, res: Response) {
     try {
       const { id } = req.params
-      const result = await userUseCase.deleteFavorite(Number(id));
-      return res.status(200).json(result);
+      const { page = null, rows = null  } = req.query;
+      const result = await userUseCase.getUserFavoriteClans(Number(id), Number(page), Number(rows));
+      return res.status(200).json(result)
     } catch (error) {
-      const message = (error as Error).message;
-      return res.status(500).json({ message });
+      const message = (error as Error).message
+      return res.status(500)
     }
   }
+
+  async createUserFavoriteClan(req: Request, res: Response) {
+    try {
+      const { body } = req;
+      const result = await userUseCase.createUserFavoriteClan(body);
+      return res.status(201).json(result)
+    } catch (error) {
+      const message = (error as Error).message
+      return res.status(500)
+    }
+  }
+  async deleteFavoriteClan(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const result = await userUseCase.deleteFavoriteClan(Number(id));
+      return res.status(200).json(result)
+    } catch (error) {
+      const message = (error as Error).message
+      return res.status(500)
+    }
+  }
+
+
+
+
 }

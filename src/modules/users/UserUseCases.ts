@@ -1,9 +1,10 @@
-import { Users, Users_Favorites_Characters } from "@prisma/client";
+import { Users, Users_Favorites_Characters, Users_Favorites_Clans } from "@prisma/client";
 import Encryptor from "../../utils/Encryptor";
 import ParamsValidator from "../../utils/ParamsValidator";
 import UserFavoriteCharacterRepository from "../repository/UserFavoriteCharacterRepository";
 import UserRepository from "../repository/UserRepository";
 import dotenv from 'dotenv'
+import UserFavoriteClanRepository from "../repository/UserFavoriteClanRepository";
 dotenv.config()
 
 export default class UserUseCases {
@@ -90,8 +91,38 @@ export default class UserUseCases {
     return userFavoriteCharacterRepository.create(data.characterId);
   }
 
-  async deleteFavorite(id: number): Promise<Object> {
+  async deleteFavoriteCharacter(id: number): Promise<Object> {
     const userFavoriteCharacterRepository = new UserFavoriteCharacterRepository(0);
     return userFavoriteCharacterRepository.delete(id);
+  }
+
+  async getUserFavoriteClans(userId: number, page: number, rows: number): Promise<Users_Favorites_Clans[] | null> {
+    const { PAGINATION_LIMIT = 20 } = process.env
+    const skip = page * rows
+    const finalLimit = rows || PAGINATION_LIMIT
+    const userFavoriteClanRepository = new UserFavoriteClanRepository(userId);
+    return userFavoriteClanRepository.find({ userId }, Number(finalLimit), skip);
+  }
+
+  async createUserFavoriteClan(data: Users_Favorites_Clans): Promise<Users_Favorites_Clans> {
+    const keys = ["clanId", "userId"];
+    const errors: string[] = ParamsValidator.validator(keys, data);
+
+    if (errors.length)
+      throw new Error(`Some params are missing: '${errors.join("', '")}'`);
+
+    const { clanId, userId } = data;
+    const userFavoriteClanRepository = new UserFavoriteClanRepository(data.userId);
+    const favorites = await userFavoriteClanRepository.find({ clanId, userId }, 1);
+
+    if (favorites?.length)
+      return favorites[0];
+
+    return userFavoriteClanRepository.create(data.clanId);
+  }
+
+  async deleteFavoriteClan(id: number): Promise<Object> {
+    const userFavoriteClanRepository = new UserFavoriteClanRepository(0);
+    return userFavoriteClanRepository.delete(id);
   }
 }

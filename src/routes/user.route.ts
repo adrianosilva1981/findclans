@@ -13,7 +13,11 @@ router.delete('/:id', authMiddleware.authorize, userController.delete)
 router.put('/update-acess/:id', authMiddleware.authorize, userController.updateAcess)
 
 router.get('/favorites/characters/:id', authMiddleware.authorize, userController.getUserFavoriteCharacters)
-router.post('/favorites/characters', authMiddleware.authorize, userController.createUserFavorite)
-router.delete('/favorites/characters/:id', authMiddleware.authorize, userController.deleteFavorite)
+router.post('/favorites/characters', authMiddleware.authorize, userController.createUserFavoriteCharacter)
+router.delete('/favorites/characters/:id', authMiddleware.authorize, userController.deleteFavoriteCharacter)
+
+router.get('/favorites/clans/:id', authMiddleware.authorize, userController.getUserFavoriteClans)
+router.post('/favorites/clans', authMiddleware.authorize, userController.createUserFavoriteClan)
+router.delete('/favorites/clans/:id', authMiddleware.authorize, userController.deleteFavoriteClan)
 
 export default router
