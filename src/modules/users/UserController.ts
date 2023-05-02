@@ -1,4 +1,4 @@
-import { Users, Users_Favorites_Characters } from "@prisma/client";
+import { Users } from "@prisma/client";
 import { Request, Response } from "express";
 import UserDT from "../../domain/dts/UserDT";
 import UserUseCases from "./UserUseCases";
@@ -6,6 +6,7 @@ import UserUseCases from "./UserUseCases";
 const userUseCase = new UserUseCases();
 
 export class UserController {
+
   async find(req: Request, res: Response) {
     try {
       const { body } = req;
@@ -148,6 +149,7 @@ export class UserController {
       return res.status(500)
     }
   }
+
   async deleteFavoriteClan(req: Request, res: Response) {
     try {
       const { id } = req.params
@@ -158,8 +160,5 @@ export class UserController {
       return res.status(500)
     }
   }
-
-
-
 
 }

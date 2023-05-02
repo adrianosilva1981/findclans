@@ -25,6 +25,28 @@ const authorize = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.body.token || req.query.token || req.headers['x-access-token']
+
+  try {
+    if (!token) {
+      throw new Error('INVALID TOKEN')
+    }
+
+    const userData = jwt.verify(token, saltKey)
+    if (!(<any>userData)?.admin) {
+      throw new Error('RESTRICT ACCESS LEVEL')
+    }
+
+    next()
+  } catch (error) {
+    res.status(401).json({
+      message: 'RESTRICT ACCESS'
+    })
+  }
+}
+
 export default {
-  authorize
+  authorize,
+  isAdmin
 }

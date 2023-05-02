@@ -3,12 +3,12 @@ import { Characters } from "@prisma/client";
 import CharacterInterface from "../../domain/interfaces/Character/CharacterInterface";
 
 export default class CharacterRepository implements CharacterInterface {
-  async find(object: object): Promise<Characters[]> {
-    return await prisma.characters.findMany({ where: object })
+  async find(query: object): Promise<Characters[]> {
+    return await prisma.characters.findMany(query)
   }
 
   async getById(id: number): Promise<Characters | null> {
-    return await prisma.characters.findUnique({ where: { id } })
+    return await prisma.characters.findUnique({ where: { id }, include: { clan: true } })
   }
 
   async create(character: Characters): Promise<Characters> {

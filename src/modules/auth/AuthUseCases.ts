@@ -27,7 +27,8 @@ export default class GetAuth {
       id: user[0].id,
       name: user[0].name,
       birthday: user[0].birthday,
-      avatar: user[0].avatar
+      avatar: user[0].avatar,
+      admin: user[0].admin,
     }
 
     return jwtUtil.generateToken(data)

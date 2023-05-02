@@ -7,8 +7,8 @@ export class CharacterController {
 
   async find(req: Request, res: Response) {
     try {
-      const { body } = req
-      const results = await characterUserUseCase.find(body);
+      const { query } = req
+      const results = await characterUserUseCase.find(query);
 
       return res.status(200).json(results);
     } catch (error) {

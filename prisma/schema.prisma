@@ -59,15 +59,16 @@ model Users {
   birthday            String                       @db.Text
   favorite_characters Users_Favorites_Characters[]
   favorite_clans      Users_Favorites_Clans[]
+  admin               Boolean                      @default(false)
 }
 
 model Users_Favorites_Clans {
-  id     Int   @id @default(autoincrement())
+  id     Int      @id @default(autoincrement())
   clanId Int
   userId Int
-  clan   Clans @relation(fields: [clanId], references: [id])
-  user   Users @relation(fields: [userId], references: [id])
-  date        DateTime   @default(now())
+  clan   Clans    @relation(fields: [clanId], references: [id])
+  user   Users    @relation(fields: [userId], references: [id])
+  date   DateTime @default(now())
 }
 
 model Users_Favorites_Characters {
