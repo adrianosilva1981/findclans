@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import UserDT from "../../domain/dts/UserDT";
 import UserUseCases from "./UserUseCases";
 
+
 const userUseCase = new UserUseCases();
 
 export class UserController {
@@ -158,6 +159,18 @@ export class UserController {
     } catch (error) {
       const message = (error as Error).message
       return res.status(500)
+    }
+  }
+
+  async uploadImage(req: Request, res: Response) {
+    try {
+      const token = req.headers['x-access-token']
+      const { files } = req
+      const image = await userUseCase.uploadImage(files, String(token));
+      return res.status(200).json({ image });
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
     }
   }
 

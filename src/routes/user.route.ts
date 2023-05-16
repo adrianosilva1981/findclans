@@ -13,6 +13,7 @@ router.post('/', authMiddleware.authorize, authMiddleware.isAdmin, userControlle
 router.put('/:id', authMiddleware.authorize, authMiddleware.isAdmin, userController.update)
 router.delete('/:id', authMiddleware.authorize, userController.delete)
 router.put('/update-acess/:id', authMiddleware.authorize, userController.updateAcess)
+router.put('/image/upload', authMiddleware.authorize, userController.uploadImage)
 
 router.get('/favorites/characters/:id', authMiddleware.authorize, userController.getUserFavoriteCharacters)
 router.post('/favorites/characters', authMiddleware.authorize, userController.createUserFavoriteCharacter)

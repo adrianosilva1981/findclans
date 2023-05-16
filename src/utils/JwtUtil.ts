@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -16,7 +16,7 @@ export default class JwtUtil {
 
   async decodeToken(token: string) {
     try {
-      return await jwt.verify(token, this.saltKey)
+      return jwt.decode(token);
     } catch (error) {
       return false
     }

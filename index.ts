@@ -1,5 +1,6 @@
-import express, { Express, Request, Response } from 'express'
-import bodyParser from 'body-parser'
+import express, { Express, Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 // importing routes
 import infoRouter from './src/routes/info.route'
@@ -18,6 +19,7 @@ const { name, domain, port } = getInfo.execute()
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
+app.use(fileUpload());
 
 // route definitions
 app.use('/', infoRouter)
