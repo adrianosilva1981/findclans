@@ -9,9 +9,9 @@ router.post('/register', userController.create)
 
 router.get('/', authMiddleware.authorize, userController.find)
 router.get('/:id', authMiddleware.authorize, userController.getById)
-router.post('/', authMiddleware.authorize, authMiddleware.isAdmin, userController.create)
-router.put('/:id', authMiddleware.authorize, authMiddleware.isAdmin, userController.update)
-router.delete('/:id', authMiddleware.authorize, userController.delete)
+router.post('/', authMiddleware.isAdmin, userController.create)
+router.put('/:id', authMiddleware.authorize, userController.update)
+router.delete('/:id', authMiddleware.isAdmin, userController.delete)
 router.put('/update-acess/:id', authMiddleware.authorize, userController.updateAcess)
 router.put('/image/upload', authMiddleware.authorize, userController.uploadImage)
 

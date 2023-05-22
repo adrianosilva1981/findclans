@@ -1,52 +1,74 @@
-import { Request, Response, NextFunction } from 'express'
-import jwt from 'jsonwebtoken'
-import * as dotenv from 'dotenv'
+import { Request, Response, NextFunction } from "express";
+import { verify, Secret } from "jsonwebtoken";
+import * as dotenv from "dotenv";
+import UserRepository from "../modules/repository/UserRepository";
 
-dotenv.config()
-const saltKey = process.env.SALT_KEY as jwt.Secret
+dotenv.config();
+const saltKey = process.env.SALT_KEY as Secret;
 
-const authorize = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.body.token || req.query.token || req.headers['x-access-token']
-
-  if (!token) {
-    res.status(401).json({
-      message: 'RESTRICT ACCESS'
-    })
-  } else {
-    jwt.verify(token, saltKey, (error: any) => {
-      if (error) {
-        res.status(401).json({
-          message: 'INVALID TOKEN'
-        })
-      } else {
-        next()
-      }
-    })
-  }
+interface IPayload {
+  id: number
 }
 
-const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.body.token || req.query.token || req.headers['x-access-token']
+const authorize = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    throw new Error("Token missing!");
+  }
+
+  const [, token] = authHeader.split(" ");
 
   try {
-    if (!token) {
-      throw new Error('INVALID TOKEN')
+    const identy = verify(token, saltKey) as IPayload;
+    const userRepository = new UserRepository()
+    const user = await userRepository.getById(identy.id)
+    if (!user) {
+      throw new Error("Unauthorized");
     }
 
-    const userData = jwt.verify(token, saltKey)
-    if (!(<any>userData)?.admin) {
-      throw new Error('RESTRICT ACCESS LEVEL')
+    req.user = {
+      id: Number(identy.id)
     }
 
     next()
-  } catch (error) {
-    res.status(401).json({
-      message: 'RESTRICT ACCESS'
-    })
+  } catch (err) {
+    return res.status(401).json({ message: (err as Error).message });
   }
-}
+};
+
+const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    throw new Error("Token missing!");
+  }
+
+  const [, token] = authHeader.split(" ");
+
+  try {
+    const identy = verify(token, saltKey) as IPayload;
+    const userRepository = new UserRepository()
+    const user = await userRepository.getById(identy.id)
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    if (!user.admin) {
+      throw new Error("Only admin level");
+    }
+
+    req.user = {
+      id: Number(identy.id)
+    }
+
+    next()
+  } catch (err) {
+    return res.status(401).json({ message: (err as Error).message });
+  }
+};
 
 export default {
   authorize,
-  isAdmin
-}
+  isAdmin,
+};

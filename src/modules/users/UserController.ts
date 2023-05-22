@@ -2,6 +2,7 @@ import { Users } from "@prisma/client";
 import { Request, Response } from "express";
 import UserDT from "../../domain/dts/UserDT";
 import UserUseCases from "./UserUseCases";
+import JwtUtil from "../../utils/JwtUtil";
 
 
 const userUseCase = new UserUseCases();
@@ -53,8 +54,15 @@ export class UserController {
   async update(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      const { body } = req;
+      const token = String(req.headers['x-access-token'])
+      const jwtUtil = new JwtUtil();
 
+      const userData = await jwtUtil.decodeToken(token)
+      if (!((<any>userData)?.admin) && id !== (<any>userData)?.id) {
+        throw new Error('RESTRICT ACCESS LEVEL')
+      }
+
+      const { body } = req;
       const safeData = UserDT.convertUserDatatoUpdate(body);
       const result = await userUseCase.update(id, safeData);
 
@@ -80,6 +88,15 @@ export class UserController {
   async updateAcess(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
+
+      const token = String(req.headers['x-access-token'])
+      const jwtUtil = new JwtUtil();
+
+      const userData = await jwtUtil.decodeToken(token)
+      if (!((<any>userData)?.admin) && id !== (<any>userData)?.id) {
+        throw new Error('RESTRICT ACCESS LEVEL')
+      }
+
       const {
         body: { email, password },
       } = req;
@@ -108,6 +125,14 @@ export class UserController {
 
   async createUserFavoriteCharacter(req: Request, res: Response) {
     try {
+      const token = String(req.headers['x-access-token'])
+      const jwtUtil = new JwtUtil();
+
+      const userData = await jwtUtil.decodeToken(token)
+      if ((<any>userData)?.id !== req.body.userId) {
+        throw new Error('RESTRICT ACCESS LEVEL')
+      }
+
       const { body } = req;
       const result = await userUseCase.createUserFavorite(body);
       return res.status(201).json(result);
@@ -164,9 +189,8 @@ export class UserController {
 
   async uploadImage(req: Request, res: Response) {
     try {
-      const token = req.headers['x-access-token']
       const { files } = req
-      const image = await userUseCase.uploadImage(files, String(token));
+      const image = await userUseCase.uploadImage(files, req.user.id);
       return res.status(200).json({ image });
     } catch (error) {
       const message = (error as Error).message;

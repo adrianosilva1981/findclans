@@ -170,11 +170,7 @@ export default class UserUseCases {
     return userFavoriteClanRepository.delete(id);
   }
 
-  async uploadImage(files: any, token: string): Promise<any> {
-    const jwtUtil = new JwtUtil();
-    const identy = await jwtUtil.decodeToken(token);
-
-    const id = identy ? (<any>identy).id : "unknow";
+  async uploadImage(files: any, id: number): Promise<any> {
     const path = `./tmp/${id}`;
 
     if (!fs.existsSync(path)) {
@@ -196,7 +192,7 @@ export default class UserUseCases {
       : name;
 
     const buffer = Buffer.from(data, 'base64');
-    fileService.saveFile(finalName, buffer, id);
+    fileService.saveFile(finalName, buffer, String(id));
 
     const s3 = new AwsS3Service()
     const buckets = await s3.listObjects()
@@ -205,7 +201,7 @@ export default class UserUseCases {
       await s3.putObject(`${id}/`)
     }
 
-    const avatar = await s3.saveFile(slugify(name), filePath, id, { ACL:'public-read' })
+    const avatar = await s3.saveFile(slugify(name), filePath, String(id), { ACL:'public-read' })
 
     await prisma.users.update({ data: { avatar }, where: { id } })
 

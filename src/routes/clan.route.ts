@@ -7,8 +7,8 @@ const router = express.Router()
 
 router.get('/', authMiddleware.authorize, clanController.find)
 router.get('/:id', authMiddleware.authorize, clanController.getById)
-router.post('/', authMiddleware.authorize, clanController.create)
-router.put('/:id', authMiddleware.authorize, clanController.update)
-router.delete('/:id', authMiddleware.authorize, clanController.delete)
+router.post('/', authMiddleware.authorize, authMiddleware.isAdmin, clanController.create)
+router.put('/:id', authMiddleware.authorize, authMiddleware.isAdmin, clanController.update)
+router.delete('/:id', authMiddleware.authorize, authMiddleware.isAdmin, clanController.delete)
 
 export default router
