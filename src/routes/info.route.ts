@@ -4,5 +4,6 @@ import { GetInfoController } from '../modules/info/useCases/getInfo/GetInfoContr
 const router = express.Router()
 
 router.get('/', GetInfoController.handle)
+router.get('/health-check', GetInfoController.handle)
 
 export default router
