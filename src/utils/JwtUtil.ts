@@ -10,7 +10,7 @@ export default class JwtUtil {
   generateToken(data: object) {
     const expiresIn = 30 * 60
     return {
-      accessToken: jwt.sign(data, this.saltKey, {})
+      access_token: jwt.sign(data, this.saltKey, { expiresIn })
     }
   }
 
