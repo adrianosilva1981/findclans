@@ -256,7 +256,10 @@ export default class UserUseCases {
   async resetPassword(req: Request) {
     const { new_password, confirm_new_password } = req.body;
     const authHeader = req.headers.authorization;
-    const [, token] = authHeader?.split(" ");
+    if (!authHeader) {
+      throw new Error("Token missing!");
+    }
+    const [, token] = authHeader.split(" ");
 
     if (!new_password) {
       throw new Error('new_password is required')

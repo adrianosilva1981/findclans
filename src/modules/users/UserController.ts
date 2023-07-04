@@ -52,8 +52,12 @@ export class UserController {
   async update(req: Request, res: Response) {
     try {
       const authHeader = req.headers.authorization;
-      const [, token] = authHeader?.split(" ");
 
+      if (!authHeader) {
+        throw new Error("Token missing!");
+      }
+
+      const [, token] = authHeader.split(" ");
       const id = Number(req.params.id);
       const jwtUtil = new JwtUtil();
 
@@ -89,10 +93,11 @@ export class UserController {
     try {
       const id = Number(req.params.id);
       const authHeader = req.headers.authorization;
-      const [, token] = authHeader?.split(" ");
-
+      if (!authHeader) {
+        throw new Error("Token missing!");
+      }
+      const [, token] = authHeader.split(" ");
       const jwtUtil = new JwtUtil();
-
       const userData = await jwtUtil.decodeToken(token);
       if (!(<any>userData)?.admin && id !== (<any>userData)?.id) {
         throw new Error("RESTRICT ACCESS LEVEL");
@@ -131,7 +136,10 @@ export class UserController {
   async createUserFavoriteCharacter(req: Request, res: Response) {
     try {
       const authHeader = req.headers.authorization;
-      const [, token] = authHeader?.split(" ");
+      if (!authHeader) {
+        throw new Error("Token missing!");
+      }
+      const [, token] = authHeader.split(" ");
       const jwtUtil = new JwtUtil();
 
       const userData = await jwtUtil.decodeToken(token);
