@@ -6,8 +6,8 @@ const clanUseCase = new ClanUseCases();
 export class ClanController {
   async find(req: Request, res: Response) {
     try {
-      const { body } = req;
-      const results = await clanUseCase.find(body);
+      const { name = '' } = req.query;
+      const results = await clanUseCase.find(String(name));
 
       return res.status(200).json(results);
     } catch (error) {

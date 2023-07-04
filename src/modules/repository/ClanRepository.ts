@@ -3,8 +3,8 @@ import { prisma } from "../../../prisma/client";
 import ClanInterface from "../../domain/interfaces/Clan/ClanInterface";
 
 export default class ClanRepository implements ClanInterface {
-  async find(object: {}): Promise<Clans[]> {
-    return await prisma.clans.findMany({ where: object })
+  async find(name: string): Promise<Clans[]> {
+    return await prisma.clans.findMany({ where: { name: { contains: name, mode: "insensitive" } } })
   }
 
   async getById(id: number): Promise<Clans | null> {

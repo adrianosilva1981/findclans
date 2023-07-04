@@ -9,8 +9,8 @@ export default class ClanUseCases {
     this.clanRepository = new ClanRepository();
   }
 
-  async find(object: object): Promise<Object[]> {
-    return await this.clanRepository.find(object);
+  async find(name: string): Promise<Object[]> {
+    return await this.clanRepository.find(name);
   }
 
   async getById(id: number): Promise<Object | null> {
