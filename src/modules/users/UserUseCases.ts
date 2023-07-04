@@ -16,6 +16,8 @@ import JwtUtil from "../../utils/JwtUtil";
 import slugify from 'slugify'
 import GeneralUtils from "../../utils/GeneralUtils";
 import { prisma } from "../../../prisma/client";
+import MailService from "../../services/MailService";
+import { Request } from "express";
 
 dotenv.config();
 
@@ -207,4 +209,82 @@ export default class UserUseCases {
 
     return avatar;
   }
+
+  async recoveryPassword(email: string) {
+    if(!email) {
+      throw new Error('Email is required!')
+    }
+
+    const user = await this.userRepository.find({ email: email })
+
+    if (!user.length) {
+      throw new Error('Email not found!')
+    }
+
+    const data = {
+      id: user[0].id,
+      name: user[0].name,
+      birthday: user[0].birthday,
+      avatar: user[0].avatar,
+      admin: user[0].admin
+    }
+
+    const jwtUtil = new JwtUtil()
+    const { access_token: token } = jwtUtil.generateToken(data)
+
+    const link = `${process.env.DOMAIN}/user/reset-password?token=${token}`
+    const from = 'adriano.silva@semantix.ai'
+    const subject = '[Find Clans] Reset Passord'
+    let text = `Hi!\n\nTo reset your password from Find Clans, please make a POST request to the link below:\n${link}\n`
+    text += `With the following json data: { "new_password": "*your new password here*", "confirm_new_password": "*your new password here again*" }\n`
+    text += 'The link is valid for 30 minutes'
+
+    let html = `<p>Hi!</p><p>To reset your password from Find Clans, please make a POST request to the link below:<br>${link}<br>`
+    html += `With the following json data: <code>{ "new_password": "*your new password here*", "confirm_new_password": "*your new password here again*" }</code></p>`
+    html += '<p>The link is valid for 30 minutes</p>'
+
+    const mailService = new MailService()
+
+    try {
+      await mailService.sendMail(from, email, subject, text, html)
+      return { link }
+    } catch (error) {
+      throw new Error('Error on send mail')
+    }
+  }
+
+  async resetPassword(req: Request) {
+    const { new_password, confirm_new_password } = req.body;
+    const authHeader = req.headers.authorization;
+    const [, token] = authHeader?.split(" ");
+
+    if (!new_password) {
+      throw new Error('new_password is required')
+    }
+
+    if (!confirm_new_password) {
+      throw new Error('confirm_new_password is required')
+    }
+
+    if (new_password != confirm_new_password) {
+      throw new Error('The passwords are differents')
+    }
+
+    const jwtUtil = new JwtUtil();
+    const userData = await jwtUtil.decodeToken(token);
+
+    if (!(<any>userData)?.id) {
+      throw new Error("INVALID TOKEN");
+    }
+
+    const Id = Number((<any>userData)?.id);
+    const encryptor = new Encryptor();
+    const data = <Users>{
+      password: encryptor.encrypt(new_password)
+    }
+
+    return this.userRepository.update(Id, data);
+
+  }
+
 }

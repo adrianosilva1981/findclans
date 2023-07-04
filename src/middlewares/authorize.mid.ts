@@ -13,16 +13,17 @@ interface IPayload {
 const authorize = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    throw new Error("Token missing!");
-  }
-
-  const [, token] = authHeader.split(" ");
-
   try {
+
+    if (!authHeader) {
+      throw new Error("Token missing!");
+    }
+
+    const [, token] = authHeader.split(" ");
     const identy = verify(token, saltKey) as IPayload;
     const userRepository = new UserRepository()
     const user = await userRepository.getById(identy.id)
+
     if (!user) {
       throw new Error("Unauthorized");
     }

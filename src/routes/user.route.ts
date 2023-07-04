@@ -23,4 +23,7 @@ router.get('/favorites/clans/:id', authMiddleware.authorize, userController.getU
 router.post('/favorites/clans', authMiddleware.authorize, userController.createUserFavoriteClan)
 router.delete('/favorites/clans/:id', authMiddleware.authorize, userController.deleteFavoriteClan)
 
+router.post('/recovery-password', userController.recoveryPassword)
+router.post('/reset-password', authMiddleware.authorize, userController.resetPassword)
+
 export default router

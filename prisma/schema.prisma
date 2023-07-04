@@ -14,18 +14,18 @@ model Characters {
   id          Int                          @id @default(autoincrement())
   name        String                       @db.Text
   description String                       @db.Text
-  sex         String                       @db.Text
-  birthday    String                       @db.Text
-  height      String                       @db.Text
-  weight      String                       @db.Text
-  bloodType   String                       @db.Text
-  ocupation   String                       @db.Text
-  afiliation  String                       @db.Text
-  patent      String                       @db.Text
-  register    String                       @db.Text
-  webpage     String                       @db.Text
+  sex         String?                       @db.Text
+  birthday    String?                       @db.Text
+  height      String?                       @db.Text
+  weight      String?                       @db.Text
+  bloodType   String?                       @db.Text
+  ocupation   String?                       @db.Text
+  afiliation  String?                       @db.Text
+  patent      String?                       @db.Text
+  register    String?                       @db.Text
+  webpage     String?                       @db.Text
   date        DateTime                     @default(now())
-  status      String                       @db.Text
+  status      String?                       @db.Text
   images      Character_Images[]
   clanId      Int?
   clan        Clans?                       @relation(fields: [clanId], references: [id])

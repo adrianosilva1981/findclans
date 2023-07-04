@@ -4,11 +4,9 @@ import UserDT from "../../domain/dts/UserDT";
 import UserUseCases from "./UserUseCases";
 import JwtUtil from "../../utils/JwtUtil";
 
-
 const userUseCase = new UserUseCases();
 
 export class UserController {
-
   async find(req: Request, res: Response) {
     try {
       const { body } = req;
@@ -53,13 +51,15 @@ export class UserController {
 
   async update(req: Request, res: Response) {
     try {
+      const authHeader = req.headers.authorization;
+      const [, token] = authHeader?.split(" ");
+
       const id = Number(req.params.id);
-      const token = String(req.headers['x-access-token'])
       const jwtUtil = new JwtUtil();
 
-      const userData = await jwtUtil.decodeToken(token)
-      if (!((<any>userData)?.admin) && id !== (<any>userData)?.id) {
-        throw new Error('RESTRICT ACCESS LEVEL')
+      const userData = await jwtUtil.decodeToken(token);
+      if (!(<any>userData)?.admin && id !== (<any>userData)?.id) {
+        throw new Error("RESTRICT ACCESS LEVEL");
       }
 
       const { body } = req;
@@ -88,13 +88,14 @@ export class UserController {
   async updateAcess(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
+      const authHeader = req.headers.authorization;
+      const [, token] = authHeader?.split(" ");
 
-      const token = String(req.headers['x-access-token'])
       const jwtUtil = new JwtUtil();
 
-      const userData = await jwtUtil.decodeToken(token)
-      if (!((<any>userData)?.admin) && id !== (<any>userData)?.id) {
-        throw new Error('RESTRICT ACCESS LEVEL')
+      const userData = await jwtUtil.decodeToken(token);
+      if (!(<any>userData)?.admin && id !== (<any>userData)?.id) {
+        throw new Error("RESTRICT ACCESS LEVEL");
       }
 
       const {
@@ -113,8 +114,12 @@ export class UserController {
   async getUserFavoriteCharacters(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { page = null, rows = null  } = req.query;
-      const results = await userUseCase.getUserFavoriteCharacters(Number(id), Number(page), Number(rows));
+      const { page = null, rows = null } = req.query;
+      const results = await userUseCase.getUserFavoriteCharacters(
+        Number(id),
+        Number(page),
+        Number(rows)
+      );
 
       return res.status(200).json(results);
     } catch (error) {
@@ -125,12 +130,13 @@ export class UserController {
 
   async createUserFavoriteCharacter(req: Request, res: Response) {
     try {
-      const token = String(req.headers['x-access-token'])
+      const authHeader = req.headers.authorization;
+      const [, token] = authHeader?.split(" ");
       const jwtUtil = new JwtUtil();
 
-      const userData = await jwtUtil.decodeToken(token)
+      const userData = await jwtUtil.decodeToken(token);
       if ((<any>userData)?.id !== req.body.userId) {
-        throw new Error('RESTRICT ACCESS LEVEL')
+        throw new Error("RESTRICT ACCESS LEVEL");
       }
 
       const { body } = req;
@@ -144,7 +150,7 @@ export class UserController {
 
   async deleteFavoriteCharacter(req: Request, res: Response) {
     try {
-      const { id } = req.params
+      const { id } = req.params;
       const result = await userUseCase.deleteFavoriteCharacter(Number(id));
       return res.status(200).json(result);
     } catch (error) {
@@ -155,13 +161,17 @@ export class UserController {
 
   async getUserFavoriteClans(req: Request, res: Response) {
     try {
-      const { id } = req.params
-      const { page = null, rows = null  } = req.query;
-      const result = await userUseCase.getUserFavoriteClans(Number(id), Number(page), Number(rows));
-      return res.status(200).json(result)
+      const { id } = req.params;
+      const { page = null, rows = null } = req.query;
+      const result = await userUseCase.getUserFavoriteClans(
+        Number(id),
+        Number(page),
+        Number(rows)
+      );
+      return res.status(200).json(result);
     } catch (error) {
-      const message = (error as Error).message
-      return res.status(500)
+      const message = (error as Error).message;
+      return res.status(500);
     }
   }
 
@@ -169,27 +179,27 @@ export class UserController {
     try {
       const { body } = req;
       const result = await userUseCase.createUserFavoriteClan(body);
-      return res.status(201).json(result)
+      return res.status(201).json(result);
     } catch (error) {
-      const message = (error as Error).message
-      return res.status(500)
+      const message = (error as Error).message;
+      return res.status(500);
     }
   }
 
   async deleteFavoriteClan(req: Request, res: Response) {
     try {
-      const { id } = req.params
+      const { id } = req.params;
       const result = await userUseCase.deleteFavoriteClan(Number(id));
-      return res.status(200).json(result)
+      return res.status(200).json(result);
     } catch (error) {
-      const message = (error as Error).message
-      return res.status(500)
+      const message = (error as Error).message;
+      return res.status(500);
     }
   }
 
   async uploadImage(req: Request, res: Response) {
     try {
-      const { files } = req
+      const { files } = req;
       const image = await userUseCase.uploadImage(files, req.user.id);
       return res.status(200).json({ image });
     } catch (error) {
@@ -198,4 +208,25 @@ export class UserController {
     }
   }
 
+  async recoveryPassword(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      const response = await userUseCase.recoveryPassword(email);
+      return res.status(200).json({ response });
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+    }
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const response = await userUseCase.resetPassword(req)
+      return res.status(200).json({ response });
+    } catch (error) {
+      const message = (error as Error).message;
+      return res.status(500).json({ message });
+
+    }
+  }
 }
