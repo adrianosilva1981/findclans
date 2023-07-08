@@ -254,13 +254,12 @@ export default class UserUseCases {
   }
 
   async resetPassword(req: Request) {
-    const { new_password, confirm_new_password } = req.body;
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    const { token = '' } = req.query
+    if (!token) {
       throw new Error("Token missing!");
     }
-    const [, token] = authHeader.split(" ");
 
+    const { new_password, confirm_new_password } = req.body;
     if (!new_password) {
       throw new Error('new_password is required')
     }
@@ -274,7 +273,7 @@ export default class UserUseCases {
     }
 
     const jwtUtil = new JwtUtil();
-    const userData = await jwtUtil.decodeToken(token);
+    const userData = await jwtUtil.decodeToken(String(token));
 
     if (!(<any>userData)?.id) {
       throw new Error("INVALID TOKEN");
